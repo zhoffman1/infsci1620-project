@@ -3,6 +3,7 @@
  * @author  Zachary Hoffman
  */
 import java.io.File;
+import java.io.FileWriter;
 import java.util.Scanner;
 
 public class UserRegistration {
@@ -17,6 +18,6 @@ public class UserRegistration {
         
         // store username and hashed password in file (username not already exist)
 
-        // 
+        // can probably store using a hashmap (makes .txt file unreadable)
     }
 }
