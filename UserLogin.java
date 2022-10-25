@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class UserLogin {
     public static void main (String[] args) {
         Scanner kbd = new Scanner(System.in); // keyboard reader
-        Scanner fr = new Scanner(new File("userinfo.txt")); // file reader
+        // need something to read file in (depends on storing as text or hashmap)
 
         // ask for username
         System.out.println("Username: ");

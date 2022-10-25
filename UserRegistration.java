@@ -5,6 +5,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
+import java.util.HashMap;
 
 public class UserRegistration {
     public static void main (String[] args) {
@@ -13,9 +14,12 @@ public class UserRegistration {
         String username;
         // create file to store usernames/passwords (if not already exist)
         
+        // if file exists already, read in the hashmap
+        // otherwise, create an empty HashMap<String, String>
+
         // read user input
         do {
-            if (exists == true) {
+            if (exists) {
                 System.out.println("Username already exists. Please enter a new username: ");
             }
             else {
