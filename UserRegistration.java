@@ -3,44 +3,181 @@
  * @author  Zachary Hoffman
  */
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 import java.util.Scanner;
+import java.util.Map;
 import java.util.HashMap;
 
 public class UserRegistration {
     public static void main (String[] args) {
+        boolean success = false;
+        File file;
+        HashMap<String, String> userInfo;
         Scanner kbd = new Scanner(System.in);
-        boolean exists = false;
-        String username;
-        // create file to store usernames/passwords (if not already exist)
+
+        file = openFile("userinfo.txt");
+        userInfo = readFile(file);
+
+        do {
+            userInfo = createUser(userInfo);
+            System.out.print("Exit the program? ");
+        } while (!kbd.nextLine().toLowerCase().equals("yes"));
+
+        success = writeFile(file, userInfo);
+        if (success) {
+            System.out.println("Successfully wrote to file. Exiting program");
+        }
+        else {
+            System.out.println("Error occurred while writing to file. Exiting program");
+        }
+    }
+
+    /**
+     * Create a file with provided filename
+     * 
+     * @param   filename path of file to create
+     * @return  file created in method
+     */
+    public static File createFile(String filename) {
+        File file;
         
-        // if file exists already, read in the hashmap
-        // otherwise, create an empty HashMap<String, String>
+        try {
+            file = new File(filename);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+            return null;
+        }
+
+        return file;
+    }
+    
+    /**
+     * Method to open a file
+     *
+     * @param   filename a string containing the path of the file to be opened
+     * @return  file that was opened
+     */
+    public static File openFile(String filename) {
+        // boolean fileExists = false;
+        File file;
+
+        // create file to store usernames/passwords (if not already exist)
+        try {
+            file = new File(filename);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+            return null;
+        }
+
+        return file;
+    }
+
+    /**
+     * Method to read a file in as a HashMap<String, String>
+     *
+     * @param   file file to read in from
+     * @return  HashMap<String, String> input of the file
+     */
+    public static HashMap<String, String> readFile(File file) {
+        HashMap<String, String> hmap = new HashMap<String, String>();
+
+        try {
+            if (file.createNewFile()) {
+                System.out.println("Created file");
+                hmap = new HashMap<String, String>();
+            }
+            else {
+                System.out.println("The file already exists, overwriting");
+                try {
+                    FileInputStream fis=new FileInputStream(file);
+                    ObjectInputStream ois=new ObjectInputStream(fis);
+                    hmap =(HashMap<String,String>)ois.readObject(); // read info from file, cast to hashmap
+                    ois.close();
+                    fis.close();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                    return null;
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+            return null;
+        }
+        
+        return hmap;
+    }
+
+    /**
+     * Create a user for a hashmap. Return the updated hashmap
+     *
+     * @param   userInfo hashmap to create user on
+     * @return  updated version of input HashMap<String, String>
+     */
+    public static HashMap<String, String> createUser(HashMap<String, String> userInfo) {
+        boolean userExists = false;
+        String username;
+        Scanner kbd = new Scanner(System.in);
 
         // read user input
         do {
-            if (exists) {
-                System.out.println("Username already exists. Please enter a new username: ");
+            if (userExists) {
+                System.out.print("Username already exists. Please enter a new username: ");
             }
             else {
-                System.out.println("Create username: ");
+                System.out.print("Create username: ");
             }
 
             username = kbd.nextLine();
-            exists = false; // TODO: make this actually check the preexisting file
-                            // true if name already exists, false if not
-        } while (exists);
 
-        System.out.println("Create password: ");
+            userExists = userInfo.containsKey(username); 
+        } while (userExists);
 
-        // get hash of password
-        
-        // store username and hashed password in file (username not already exist)
+        // create password
+        System.out.print("Create password: ");
+        String password = kbd.nextLine();
+        String hashedPassword = JavaMD5Hash.md5(password); // get hash of password
 
-        // can probably store using a hashmap (makes .txt file unreadable)
-
+        // put username and hashed password in hashmap
+        userInfo.put(username, hashedPassword);
         System.out.println("Successfully created user " + username + ".");
 
-        // TODO: make the whole program loop so that the user can create multiple users in 1 go
+        // return the modified hashmap
+        return userInfo;
+    }
+
+    /**
+     * Write hashmap to file
+     *
+     * @param   file file to write out to
+     * @param   hmap hashmap to write to file
+     * @return  true if successfully wrote to file, false if not
+     */
+    public static boolean writeFile(File file, HashMap<String, String> hmap) {
+        // write hashmap to file
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(hmap);
+            oos.close();
+            fos.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            // System.exit(1);
+            return false;
+        }
+
+        return true;
     }
 }
