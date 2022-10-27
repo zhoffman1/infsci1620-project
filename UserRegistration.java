@@ -63,7 +63,6 @@ public class UserRegistration {
      * @return  file that was opened
      */
     public static File openFile(String filename) {
-        // boolean fileExists = false;
         File file;
 
         // create file to store usernames/passwords (if not already exist)
@@ -96,9 +95,9 @@ public class UserRegistration {
             else {
                 System.out.println("The file already exists, overwriting");
                 try {
-                    FileInputStream fis=new FileInputStream(file);
-                    ObjectInputStream ois=new ObjectInputStream(fis);
-                    hmap =(HashMap<String,String>)ois.readObject(); // read info from file, cast to hashmap
+                    FileInputStream fis = new FileInputStream(file);
+                    ObjectInputStream ois = new ObjectInputStream(fis);
+                    hmap = (HashMap<String,String>)ois.readObject(); // read info from file, cast to hashmap
                     ois.close();
                     fis.close();
                 }
