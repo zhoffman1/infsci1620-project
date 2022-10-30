@@ -17,7 +17,7 @@ public class UserLogin {
         // read hashmap in
 
         // get user info
-        String[2] userInfo = getUserInfo(kbd);
+        String[] userInfo = getUserInfo(kbd);
         
         // check if username exists
 
@@ -27,6 +27,16 @@ public class UserLogin {
             // see if they match
     }
 
+    /** Reads a hashmap in from a stored file, returns the hashmap
+     *
+     *
+     *
+     *
+     */
+    public static HashMap<String, String> readFromFile() {
+        return null;
+    }
+
     /**
      * Ask for user to input their username and password, return an array 
      * containing their inputs
@@ -34,7 +44,6 @@ public class UserLogin {
      * @param   kbd scanner reading from keyboard (System.in)
      * @return  String array containing the username input at index 0 and 
      *          password input at index 1
-     *
      */
     public static String[] getUserInfo(Scanner kbd) {
         String arr[] = new String[2];
@@ -56,6 +65,6 @@ public class UserLogin {
 
     // check whether this user actually exists and if their password is valid
     public static boolean verifyUser(String username, String password, HashMap<String> hmap) {
-        
+        return false;
     }
 }

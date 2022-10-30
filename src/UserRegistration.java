@@ -94,18 +94,12 @@ public class UserRegistration {
             }
             else {
                 System.out.println("The file already exists, overwriting");
-                try {
-                    FileInputStream fis = new FileInputStream(file);
-                    ObjectInputStream ois = new ObjectInputStream(fis);
-                    hmap = (HashMap<String,String>)ois.readObject(); // read info from file, cast to hashmap
-                    ois.close();
-                    fis.close();
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                    System.exit(1);
-                    return null;
-                }
+                // can probably get rid of this try catch since it is already in a try catch
+                FileInputStream fis = new FileInputStream(file);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                hmap = (HashMap<String,String>)ois.readObject(); // read info from file, cast to hashmap
+                ois.close();
+                fis.close();
             }
         }
         catch (Exception e) {
