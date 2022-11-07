@@ -26,21 +26,10 @@ public class UserRegistration {
         userInfo = readFile(file);
 
         do {
+            // create the user and ask to continue
             userInfo = createUser(userInfo);
-
-            success = writeObjectFile(file, userInfo); // write object
-            success = writeReadableFile(file, userInfo) && success; // write readable
-            
-            // return whether writing was successful
-            if (success) {
-                System.out.println("Successfully wrote to file");
-            }
-            else {
-                System.out.println("Error occurred while writing to file");
-            }
-
-            System.out.print("Exit the program? ");
-        } while (!kbd.nextLine().toLowerCase().equals("yes"));
+            System.out.print("Type 'y' to add more users: ");
+        } while (kbd.nextLine().toLowerCase().equals("y"));
 
         System.out.println("Exiting program");
     }
@@ -155,6 +144,21 @@ public class UserRegistration {
         userInfo.put(username, hashedPassword);
         System.out.println("Successfully created user " + username + ".");
 
+        File file = openFile("../doc/userinfo.txt"); 
+        File readableFile = openFile("../doc/password.txt");
+
+        boolean success = writeObjectFile(file, userInfo); // write object
+        success = writeReadableFile(readableFile, username, hashedPassword) && success; // write readable
+
+        // return whether writing was successful
+        if (success) {
+            System.out.println("Successfully wrote to file");
+        }
+        else {
+            System.out.println("Error occurred while writing to file");
+            System.exit(1);
+        }
+
         // return the modified hashmap
         return userInfo;
     }
@@ -186,16 +190,26 @@ public class UserRegistration {
 
     /**
      * Write contents of hashmap out to a readable file
-     * TODO: make this write out only to end of file not rewrite entire hmap
      *
      * @param   file file to write to
-     * @param   hmap hashmap to to write to file
+     * @param   username username to write out
+     * @param   hashedPassword hashed password of the username
      * @return  true if succesfully wrote to file, false if not
      *
      */
-    public static boolean writeReadableFile(File file, HashMap<String, String> hmap) {
-        // TODO: need to make this an actual thing
-        
-        return false;
+    public static boolean writeReadableFile(File file, String username, String hashedPassword) {
+        // write username and password out to file
+        try {
+            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+            pw.write(username + " " + hashedPassword + "\n");
+            pw.close(); 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1); // might need system exit here, probably not
+            return false;
+        }
+
+        return true;
     }
 }
