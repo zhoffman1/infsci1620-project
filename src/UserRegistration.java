@@ -7,6 +7,10 @@ import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.Map;
 import java.util.HashMap;
@@ -18,21 +22,27 @@ public class UserRegistration {
         HashMap<String, String> userInfo;
         Scanner kbd = new Scanner(System.in);
 
-        file = openFile("userinfo.txt");
+        file = openFile("../doc/userinfo.txt"); 
         userInfo = readFile(file);
 
         do {
             userInfo = createUser(userInfo);
+
+            success = writeObjectFile(file, userInfo); // write object
+            success = writeReadableFile(file, userInfo) && success; // write readable
+            
+            // return whether writing was successful
+            if (success) {
+                System.out.println("Successfully wrote to file");
+            }
+            else {
+                System.out.println("Error occurred while writing to file");
+            }
+
             System.out.print("Exit the program? ");
         } while (!kbd.nextLine().toLowerCase().equals("yes"));
 
-        success = writeFile(file, userInfo);
-        if (success) {
-            System.out.println("Successfully wrote to file. Exiting program");
-        }
-        else {
-            System.out.println("Error occurred while writing to file. Exiting program");
-        }
+        System.out.println("Exiting program");
     }
 
     /**
@@ -49,7 +59,7 @@ public class UserRegistration {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
+            System.exit(1); // can probably get rid of the system exit or return
             return null;
         }
 
@@ -71,7 +81,7 @@ public class UserRegistration {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
+            System.exit(1); // can probably get rid of the system exit or return
             return null;
         }
 
@@ -94,7 +104,7 @@ public class UserRegistration {
             }
             else {
                 System.out.println("The file already exists, overwriting");
-                // can probably get rid of this try catch since it is already in a try catch
+                
                 FileInputStream fis = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 hmap = (HashMap<String,String>)ois.readObject(); // read info from file, cast to hashmap
@@ -104,7 +114,7 @@ public class UserRegistration {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
+            System.exit(1); // can probably get rid of the system exit or return
             return null;
         }
         
@@ -150,13 +160,13 @@ public class UserRegistration {
     }
 
     /**
-     * Write hashmap to file
+     * Write hashmap object to file
      *
      * @param   file file to write out to
      * @param   hmap hashmap to write to file
      * @return  true if successfully wrote to file, false if not
      */
-    public static boolean writeFile(File file, HashMap<String, String> hmap) {
+    public static boolean writeObjectFile(File file, HashMap<String, String> hmap) {
         // write hashmap to file
         try {
             FileOutputStream fos = new FileOutputStream(file);
@@ -172,5 +182,20 @@ public class UserRegistration {
         }
 
         return true;
+    }
+
+    /**
+     * Write contents of hashmap out to a readable file
+     * TODO: make this write out only to end of file not rewrite entire hmap
+     *
+     * @param   file file to write to
+     * @param   hmap hashmap to to write to file
+     * @return  true if succesfully wrote to file, false if not
+     *
+     */
+    public static boolean writeReadableFile(File file, HashMap<String, String> hmap) {
+        // TODO: need to make this an actual thing
+        
+        return false;
     }
 }
