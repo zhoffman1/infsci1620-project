@@ -1,6 +1,7 @@
 /** 
  * Program for users to log in to the system
  * @author  Zachary Hoffman
+ * @author  Savee Sok-Coyle
  */
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,9 +15,13 @@ import java.util.HashMap;
 public class UserLogin {
     public static void main (String[] args) {
         Scanner kbd = new Scanner(System.in);
-        // TODO: check if file eixsts. If not, exit pgm
-        //       read in from the hash mapped file, not the readable one
-        File file = new File("../doc/userinfo.txt"); 
+        File file = new File("../doc/userinfo.txt");
+
+        // check if file exists
+        if (!file.exists()) {
+            System.out.println("File does not exist. Exiting program.");
+            System.exit(0);
+        }
 
         // read hashmap in
         HashMap<String, String> hmap = readFile(file);
@@ -24,30 +29,45 @@ public class UserLogin {
         // get user info
         String[] userInfo = getUserInfo(kbd);
 
-        do {
-            // verify user
+        // verify user
+        boolean correct = verifyUser(userInfo[0], userInfo[1], hmap);
 
+        // print accordingly
+        if (correct) {
+            System.out.println("You are now logged in as user " + userInfo[0]);
+        }
+        else {
+            System.out.println("Username or password was incorrect. Run program to try again.");
         }
     }
 
     /** 
      * Reads a hashmap in from a stored file, returns the hashmap
+     * To be removed. readFile() instead
      * 
      * @param   filename path of file to read in
      * @return  HashMap<String, String> mapping usernames to passwords
      *
      */
     public static HashMap<String, String> readFromFile(String filename) {
+        HashMap<String, String> hmap;
+
         try {
             File file = new File(filename);
             FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis);
+            
             hmap = (HashMap<String,String>)ois.readObject(); // read info from file, cast to hashmap
             ois.close();
             fis.close();
+
+            return hmap;
         }
-        
-        return null;
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1); // might need system exit here, probably not
+            return null;
+        }
     }
 
     /**
@@ -62,11 +82,11 @@ public class UserLogin {
         String arr[] = new String[2];
 
         // ask for username
-        System.out.println("Username: ");
+        System.out.print("Username: ");
         String username = kbd.nextLine();
 
         // ask for password
-        System.out.println("Password: ");
+        System.out.print("Password: ");
         String password = kbd.nextLine();
 
         // store username and password in array
@@ -84,7 +104,7 @@ public class UserLogin {
      * @param   hmap HashMap<String, String> to refer username and password to    
      * @return  true if user exists and supplied the correct password, false otherwise
      */
-    public static boolean verifyUser(String username, String password, HashMap<String> hmap) {
+    public static boolean verifyUser(String username, String password, HashMap<String, String> hmap) {
         String hPassword = JavaMD5Hash.md5(password); // hashed password using md5
         
         // if the username exists and the password is a correct match, return true
