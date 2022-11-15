@@ -1,6 +1,7 @@
 /** 
  * Program to register users to the system
  * @author  Zachary Hoffman
+ * @author  Savee Sok-Coyle
  */
 import java.io.File;
 import java.io.FileOutputStream;
@@ -93,9 +94,10 @@ public class UserRegistration {
             }
             else {
                 System.out.println("The file already exists, overwriting");
-                
                 FileInputStream fis = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fis);
+                
+                // write to hmap
                 hmap = (HashMap<String,String>)ois.readObject(); // read info from file, cast to hashmap
                 ois.close();
                 fis.close();
