@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -71,7 +70,7 @@ public class UserRegistration {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.exit(1); // can probably get rid of the system exit or return
+            System.exit(1);
             return null;
         }
 
@@ -105,7 +104,7 @@ public class UserRegistration {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.exit(1); // can probably get rid of the system exit or return
+            System.exit(1);
             return null;
         }
         
@@ -183,7 +182,7 @@ public class UserRegistration {
         }
         catch (Exception e) {
             e.printStackTrace();
-            // System.exit(1);
+            System.exit(1);
             return false;
         }
 
@@ -197,7 +196,6 @@ public class UserRegistration {
      * @param   username username to write out
      * @param   hashedPassword hashed password of the username
      * @return  true if succesfully wrote to file, false if not
-     *
      */
     public static boolean writeReadableFile(File file, String username, String hashedPassword) {
         // write username and password out to file
@@ -208,7 +206,7 @@ public class UserRegistration {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.exit(1); // might need system exit here, probably not
+            System.exit(1); 
             return false;
         }
 
