@@ -1,0 +1,31 @@
+For all programs, first navigate to the src/ folder
+
+UserRegistration Usage Information:
+USAGE: 
+    To start the program: java UserRegistration
+    When prompted, input a username and an associated password
+    After inputting a user, enter y to continue adding new users
+    NOTE: 
+    If the user already exists, then they cannot be added again
+
+UserLogin Usage Information:
+USAGE:
+    To start the program: java UserLogin
+    When prompted, enter a username and an associated password
+    If the user is in the system and the password is correct, the user will receive
+    a success message. Otherwise, they will receive a failure message.
+
+PasswordStrength Usage Information:
+USAGE: 
+    To start the program: java PasswordStrength
+    When prompted to input a password, input a password to test the strength of
+
+
+
+
+
+
+
+
+
+
