@@ -57,7 +57,8 @@ public class UserLogin {
             FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis);
             
-            hmap = (HashMap<String,String>)ois.readObject(); // read info from file, cast to hashmap
+            // read info from file, cast to hashmap
+            hmap = (HashMap<String,String>)ois.readObject();
             ois.close();
             fis.close();
 
@@ -65,7 +66,7 @@ public class UserLogin {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.exit(1); // might need system exit here, probably not
+            System.exit(1);
             return null;
         }
     }
@@ -112,7 +113,7 @@ public class UserLogin {
             return true;
         }
 
-        // otherwise, either username doesn't exist or the password is incorrect
+        // either username doesn't exist or the password is incorrect
         return false;
     }
 
@@ -129,7 +130,9 @@ public class UserLogin {
             // check if file exists, if not exit
             FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            hmap = (HashMap<String,String>)ois.readObject(); // read info from file, cast to hashmap
+
+            // read info from file, cast to hashmap
+            hmap = (HashMap<String,String>)ois.readObject(); 
             ois.close();
             fis.close();
         }

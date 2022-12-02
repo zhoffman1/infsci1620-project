@@ -1,3 +1,8 @@
+/** 
+ * Program used to evaluate password strength
+ * @author  Zachary Hoffman
+ * @author  Savee Sok-Coyle
+ */
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,7 +20,7 @@ public class PasswordStrength {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.exit(1); // can probably get rid of the system exit or return
+            System.exit(1);
             return;
         }
 
@@ -28,11 +33,13 @@ public class PasswordStrength {
             while (br.ready()) {
                 String word = br.readLine();
 
+                // if password is in dictionary, weak
                 if (password.equals(word)) {
                     output = password + " is a weak password";
                     passwordFound = true;
-                    break;
+                    break; // break since weak is as low of strength as we go
                 }
+                // if password is a substring of word in dictionary, moderate
                 else if (password.contains(word)) {
                     output = password + " is a moderate password";
                     passwordFound = true;
@@ -41,10 +48,11 @@ public class PasswordStrength {
         } 
         catch (Exception e) {
             e.printStackTrace();
-            System.exit(1); // can probably get rid of the system exit or return
+            System.exit(1);
             return;
         }
 
+        // if password is not weak or moderate, it must be strong
         if (!passwordFound) {
             output = password + " is a strong password";
         }
