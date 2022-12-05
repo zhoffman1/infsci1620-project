@@ -15,6 +15,15 @@ USAGE:
     If the user is in the system and the password is correct, the user will receive
     a success message. Otherwise, they will receive a failure message.
 
+PasswordCracker Usage Information:
+USAGE:
+    To start the program: java PasswordCracker
+    When prompted, enter the MD5 hash of a password
+    If the hash of the password is a dictionary word or a dictionary word with added 
+    numbers or special characters, the user will receive the plaintext value of the
+    password and the total time in seconds it took to crack the password.
+    Otherwise, they will receive a message that the password is not in the system.
+
 PasswordStrength Usage Information:
 USAGE: 
     To start the program: java PasswordStrength
