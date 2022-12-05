@@ -24,12 +24,10 @@ public class PasswordCracker {
 
         System.out.print("Please enter the MD5 hash of a password: ");
         String password = kbd.nextLine();
-        long startTime = System.nanoTime();
+        long startTime = System.nanoTime(); //gets the time when user inserts the hash of the password
         long endTime = 0;
         long totalTime = 0;
         boolean passwordFound = false;
-        boolean typeOne = false;
-        boolean typeTwo = false;
 
         HashMap<String, String> digestToPassword = new HashMap<String, String>(); //Hashmap in order to match word with hash
         ArrayList<String> words = new ArrayList<String>(); //holds the all of the words in the dictionary
@@ -55,954 +53,271 @@ public class PasswordCracker {
             System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
             System.exit(0); //exits the program
         }
+        else {
+            System.out.println("The password is not a type 1 password. Now checking type 2 passwords...");
+        }
 
         checkPassword(words, password, startTime); //function for Type 2 of solving passwords
+
+        if(passwordFound == false) {
+            System.out.println("The password is not in the system.");
+        }
     }
     /* Type 2 for solving passwords */
-    static void checkPassword(ArrayList<String> words, String password, long startTime) { 
-        String[] num = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}; //creates an array of the numbers
-        String[] spec = new String[]{"@", "#", "$", "%", "&"}; //creates an array of the special charaters
+    static void checkPassword(ArrayList<String> words, String password, long startTime) {
+        String[] num = new String[]{"", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}; //creates an array of the numbers
+        String[] spec = new String[]{"", "@", "#", "$", "%", "&"}; //creates an array of the special charaters
         long endTime = 0;
         long totalTime = 0;
+        boolean passwordFound = false;
         for(String word : words) {
-            //there are 15 possible iterations and 15 potential characters
-            //1: plain word (Type 1)
-            //2: _ word
-            //3: word _
-            //4: _ _ word
-            //5: _ word _
-            //6: word _ _
-            //below is #2
-            for(int i = 0; i < num.length; i++) { //num at front
-                String specWord = num[i] + word;
-                String specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
-                if (specDigest.equals(password)) { //checks if the hash given matches this hash
-                    System.out.println("The password is " + specWord);
-                    endTime = System.nanoTime(); //returns how long it takes for the program to run
-                    totalTime = endTime - startTime;
-                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                    System.exit(0); //exits the program
-                }
-            }
-           for(int j = 0; j < spec.length; j++) { //char at front
-                String specWord = spec[j] + word;
-                String specDigest = JavaMD5Hash.md5(specWord);
-                if (specDigest.equals(password)) {
-                    System.out.println("The password is " + specWord);
-                    endTime = System.nanoTime();
-                    totalTime = endTime - startTime;
-                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                    System.exit(0);
-                }
-            }
-            //#3
-            for(int i = 0; i< num.length; i++) { //num at back
-                String specWord = word + num[i];
-                String specDigest = JavaMD5Hash.md5(specWord);
-                if (specDigest.equals(password)) {
-                    System.out.println("The password is " + specWord);
-                    endTime = System.nanoTime();
-                    totalTime = endTime - startTime;
-                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                    System.exit(0);
-                }
-            }
-            for(int j = 0; j < spec.length; j++) { //char at back
-                String specWord = word + spec[j];
-                String specDigest = JavaMD5Hash.md5(specWord);
-                if (specDigest.equals(password)) {
-                    System.out.println("The password is " + specWord);
-                    endTime = System.nanoTime();
-                    totalTime = endTime - startTime;
-                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                    System.exit(0);
-                }
-            }
-            //#4
-            for(int i = 0; i< num.length; i++) { //num and char at front
-                for(int j = 0; j < spec.length; j++){
-                    String specWord = num[i] + spec[j] + word;
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            } 
-            for(int i = 0; i< num.length; i++) { //num and num at front
-                for(int j = 0; j < num.length; j++){
-                    String specWord = num[i] + num[j] + word;
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            }
-            for(int i = 0; i < spec.length; i++) { //char and num at front
-                for(int j = 0; j < num.length; j++) {
-                    String specWord = spec[i] + num[j] + word;
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            }
-            for(int i = 0; i < spec.length; i++) { //char and char at front
-                for(int j = 0; j < spec.length; j++) {
-                    String specWord = spec[i] + spec[j] + word;
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            }
-            //#5
-            for(int i = 0; i< num.length; i++) { //num front and num back
-                for(int j = 0; j < num.length; j++){
-                    String specWord = num[i] + word + num[j];
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            }
-            for(int i = 0; i < num.length; i++) { //num front and char back
-                for(int j = 0; j < spec.length; j++) {
-                    String specWord = num[i] + word + spec[j];
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            }
-            for(int i = 0; i < spec.length; i++) { //char front and num back
-                for(int j = 0; j < num.length; j++) {
-                    String specWord = spec[i] + word + num[i];
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            }
-            for(int i = 0; i < spec.length; i++) { //char front and char back
-                for(int j = 0; j < spec.length; j++) {
-                    String specWord = spec[i] + word + spec[j];
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            }
-            //#6
-            for(int i = 0; i< num.length; i++) { //num and char at back
-                for(int j = 0; j < spec.length; j++){
-                    String specWord = word + num[i] + spec[j];
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            }
-            for(int i = 0; i< num.length; i++) { //num and num at back
-                for(int j = 0; j < num.length; j++){
-                    String specWord = word + num[i] + num[j];
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            }
-            for(int i = 0; i < spec.length; i++) { //char and num at back
-                for(int j = 0; j < num.length; j++) {
-                    String specWord = word + spec[i] + num[j];
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            }
-            for(int i = 0; i < spec.length; i++) { //char and char at back
-                for(int j = 0; j < spec.length; j++) {
-                    String specWord = word + spec[i] + spec[j];
-                    String specDigest = JavaMD5Hash.md5(specWord);
-                    if (specDigest.equals(password)) {
-                        System.out.println("The password is " + specWord);
-                        endTime = System.nanoTime();
-                        totalTime = endTime - startTime;
-                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                        System.exit(0);
-                    }
-                }
-            }
-        }
-            //#7: _ _ _ word
-            //#8: _ _ word _
-            //#9: _ word _ _
-            //#10: word _ _ _
+            for(int i = 0; i< num.length && !passwordFound; i++) { //sets num1
+                for(int j = 0; j < num.length && !passwordFound; j++){  //sets num2
+                    for(int k = 0; k < spec.length && !passwordFound; k++){ //sets spec1
+                        for(int l = 0; l < spec.length && !passwordFound; l++) { //sets spec2
 
-            //a possible way to solve repeatedness is to have a loop and move the word position each time
-            //Word#1 = _ _ _ word
-            //Word#2 = _ _ word _
-            //Word#3 = _ word _ _
-            //Word#4 = word _ _ _
+                            /*
+                             * All possible ways of the password existing
+                             * 
+                             * 1: num1 + num2 + spec1 + spec2 + word
+                             * 2: num1 + spec1 + num2 + spec2 + word
+                             * 3: num1 + spec1 + spec2 + num2 + word
+                             * 4: spec1 + num1 + spec2 + num2 + word
+                             * 5: spec1 + spec2 + num1 + num2 + word
+                             * 6: spec1 + num1 + num2 + spec2 + word - 30
+                             */
 
-            //#7 - #10 (#1 - num, num, char #2 - num, char, char #3 - num, char, num #4 - char, char, num #5 - char, num, char #6 - char, num, num)
-        for(String word : words) {
-            for(int w = 1; w <= 4; w++) {
-                for(int i = 0; i< num.length; i++) {
-                    for(int j = 0; j < num.length; j++){ 
-                        for(int k = 0; k < spec.length; k++){
-                            if(w ==1) { //num and num and char at front
-                                String specWord = num[i] + num[j] + spec[k] + word;
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            String specWord = num[i] + num[j] + spec[k] + spec[l] + word; //case #1
+                            String specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w ==2) { //num and num at front and char at back
-                                String specWord = num[i] + num[j] + word + spec[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = num[i] + spec[k] + num[j] + spec[l] + word; //case #2
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 3) { //num at front and num and char at back
-                                String specWord = num[i] + word + num[j] + spec[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = num[i] + spec[k] + spec[l] + num[j] + word; //case #3
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 4) { //num and num and char at back
-                                String specWord = word + num[i] + num[j] + spec[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);  
-                                if (specDigest.equals(password)) {
+                            specWord = spec[k] + num[i] + spec[l] + num[j] + word; //case #4
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
-                                }       
-                            }
-                        }
-                    }
-                }
-            }
-            for(int w = 1; w <= 4; w++) {
-                for(int i = 0; i< num.length; i++) {
-                    for(int j = 0; j < spec.length; j++){
-                        for(int k = 0; k < spec.length; k++){
-                            if(w ==1) { //num and char and char at front
-                                String specWord = num[i] + spec[j] + spec[k] + word;
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
-                                    System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w ==2) { //num and char at front and char at back
-                                String specWord = num[i] + spec[j] + word + spec[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = spec[k] + spec[l] + num[i] + num[j] + word; //case #5
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 3) { //num at front and char and char at back
-                                String specWord = num[i] + word + spec[j] + spec[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = spec[k] + num[i] + num[j] + spec[l] + word; //case #6
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 4) { //num and char and char at back
-                                String specWord = word + num[i] + spec[j] + spec[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            //word in fourth
+                            specWord = num[i] + num[j] + spec[k] + word + spec[l]; //case #7
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                        }
-                    }
-                }
-            }
-            for(int w = 1; w <= 4; w++) {
-                for(int i = 0; i< num.length; i++) { //num and char and num at front
-                    for(int j = 0; j < spec.length; j++){
-                        for(int k = 0; k < num.length; k++){
-                            if(w ==1) { //num and char and num at front
-                                String specWord = num[i] + spec[j] + num[k] + word;
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = num[i] + spec[k] + num[j] + word + spec[l]; //case #8
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w ==2) { //num and char at front and num at back
-                                String specWord = num[i] + spec[j] + word + num[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = num[i] + spec[k] + spec[l] + word + num[j]; //case #9
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 3) { //num at front and char and num at back
-                                String specWord = num[i] + word + spec[j] + num[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = spec[k] + num[i] + spec[l] + word + num[j]; //case #10
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 4) { //num and char and num at back
-                                String specWord = word + num[i] + spec[j] + num[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = spec[k] + spec[l] + num[i] + word + num[j]; //case #11
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                        }
-                    }
-                }
-            }
-            for(int w = 1; w <= 4; w++) {
-                for(int i = 0; i< spec.length; i++) { 
-                    for(int j = 0; j < spec.length; j++){
-                        for(int k = 0; k < num.length; k++){
-                            if(w ==1) { //char and char and num at front
-                                String specWord = spec[i] + spec[j] + num[k] + word;
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = spec[k] + num[i] + num[j] + word + spec[l]; //case #12
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w ==2) { //char and char at front and num at back
-                                String specWord = spec[i] + spec[j] + word + num[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                        
+                            //word in middle
+                            specWord = num[i] + num[j] + word + spec[k] + spec[l]; //case #13
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 3) { //char at front and char and num at back
-                                String specWord = spec[i] + word + spec[j] + num[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = num[i] + spec[k] + word + num[j] + spec[l]; //case #14
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 4) { //char and char and num at back
-                                String specWord = word + spec[i] + spec[j] + num[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = num[i] + spec[k] + word + spec[l] + num[j]; //case #15
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                        }
-                    }
-                }
-            }
-            for(int w = 1; w <= 4; w++) {
-                for(int i = 0; i< spec.length; i++) { //char and num and char at front
-                    for(int j = 0; j < num.length; j++){
-                        for(int k = 0; k < spec.length; k++){
-                            if(w ==1) { //char and num and char at front
-                                String specWord = spec[i] + num[j] + spec[k] + word;
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = spec[k] + num[i] + word + spec[l] + num[j]; //case #16
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w ==2) { //char and num at front and char at back
-                                String specWord = spec[i] + num[j] + word + spec[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = spec[k] + spec[l] + word + num[i] + num[j]; //case #17
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 3) { //char at front and num and char at back
-                                String specWord = spec[i] + word + num[j] + spec[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = spec[k] + num[i] + word + num[j] + spec[l]; //case #18
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 4) { //char and num and char at back
-                                String specWord = word + spec[i] + num[j] + spec[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            //word in second
+                            specWord = num[i] + word + num[j] + spec[k] + spec[l]; //case #19
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                        }
-                    }
-                }
-            }
-            for(int w = 1; w <= 4; w++) {
-                for(int i = 0; i< spec.length; i++) { //char and num and num at front
-                    for(int j = 0; j < num.length; j++){
-                        for(int k = 0; k < num.length; k++){
-                            if(w ==1) { //char and num and num at front
-                                String specWord = spec[i] + num[j] + num[k] + word;
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = num[i] + word + spec[k] + num[j] + spec[l]; //case #20
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w ==2) { //char and num at front and num at back
-                                String specWord = spec[i] + num[j] + word + num[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = num[i] + word + spec[k] + spec[l] + num[j] + word; //case #21
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 3) { //char at front and num and num at back
-                                String specWord = spec[i] + word + num[j] + num[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = spec[k] + word + num[i] + spec[l] + num[j]; //case #22
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
-                            else if(w == 4) { //char and num and num at back
-                                String specWord = word + spec[i] + num[j] + num[k];
-                                String specDigest = JavaMD5Hash.md5(specWord);
-                                if (specDigest.equals(password)) {
+                            specWord = spec[k] + word + spec[l] + num[i] + num[j]; //case #23
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
                                     System.out.println("The password is " + specWord);
-                                    endTime = System.nanoTime();
-                                    totalTime = endTime - startTime;
-                                    System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                    System.exit(0);
+                                    passwordFound = true;
+                                    break;
                                 }
-                            }
+                            specWord = spec[k] + word + num[i] + num[j] + spec[l]; //case #24
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
+                                    System.out.println("The password is " + specWord);
+                                    passwordFound = true;
+                                    break;
+                                }
+                            //word in first
+                            specWord = word + num[i] + num[j] + spec[k] + spec[l]; //case #25
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
+                                    System.out.println("The password is " + specWord);
+                                    passwordFound = true;
+                                    break;
+                                }
+                            specWord = word + num[i] + spec[k] + num[j] + spec[l]; //case #26
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
+                                    System.out.println("The password is " + specWord);
+                                    passwordFound = true;
+                                    break;
+                                }
+                            specWord = word + num[i] + spec[k] + spec[l] + num[j]; //case #27
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
+                                    System.out.println("The password is " + specWord);
+                                    passwordFound = true;
+                                    break;
+                                }
+                            specWord = word + spec[k] + num[i] + spec[l] + num[j]; //case #28
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
+                                    System.out.println("The password is " + specWord);
+                                    passwordFound = true;
+                                    break;
+                                }
+                            specWord = word + spec[k] + spec[l] + num[i] + num[j]; //case #29
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
+                                    System.out.println("The password is " + specWord);
+                                    passwordFound = true;
+                                    break;
+                                }
+                            specWord = word + spec[k] + num[i] + num[j] + spec[l] + word; //case #30
+                            specDigest = JavaMD5Hash.md5(specWord); //creates the hash of the special word
+                                if (specDigest.equals(password)) { //checks if the hash given matches this hash
+                                    System.out.println("The password is " + specWord);
+                                    passwordFound = true;
+                                    break;
+                                }
                         }
                     }
                 }
             }
         }
-
-            //#11: _ _ _ _ word
-            //#12: _ _ _ word _
-            //#13: _ _ word _ _
-            //#14: _ word _ _ _
-            //#15: word _ _ _ _
-            //#11 - #15 (#1 - num, num, char, char #2 - num, char, char, num #3 - num, char, num, char #4 - char, char, num, num)
-            //(#5 - char, num, char, num #6 - char, num, num, char)
-        for(String word : words) {
-            for(int w = 1; w <= 5; w++) { //num, num, char, char
-                for(int i = 0; i< num.length; i++) {
-                    for(int j = 0; j < num.length; j++){ 
-                        for(int k = 0; k < spec.length; k++){
-                            for(int l = 0; l < spec.length; l++) {
-                                if(w ==1) { //num and num and char and char at front
-                                    String specWord = num[i] + num[j] + spec[k] + spec[l] + word;
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w ==2) { //num and num and char at front and char at back
-                                    String specWord = num[i] + num[j] + spec[k] + word + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 3) { //num and num at front and char and char back
-                                    String specWord = num[i] + num[j] + word + spec[k] + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 4) { //num at front and num and char and char at back
-                                    String specWord = num[i] + word + num[j] + spec[k] + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 5) { //num and num and char and char at back
-                                    String specWord = word + num[i] + num[j] + spec[k] + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            for(int w = 1; w <= 5; w++) { //num, char, char, num
-                for(int i = 0; i< num.length; i++) {
-                    for(int j = 0; j < spec.length; j++){ 
-                        for(int k = 0; k < spec.length; k++){
-                            for(int l = 0; l < num.length; l++) {
-                                if(w ==1) { //num and char and char and num at front
-                                    String specWord = num[i] + spec[j] + spec[k] + num[l] + word;
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w ==2) { //num and char and char at front and num at back
-                                    String specWord = num[i] + spec[j] + spec[k] + word + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 3) { //num and char at front and char and num back
-                                    String specWord = num[i] + spec[j] + word + spec[k] + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 4) { //num at front and char and char and num at back
-                                    String specWord = num[i] + word + spec[j] + spec[k] + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 5) { //num and char and char and num at back
-                                    String specWord = word + num[i] + spec[j] + spec[k] + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            for(int w = 1; w <= 5; w++) { //num, char, num, char
-                for(int i = 0; i< num.length; i++) {
-                    for(int j = 0; j < spec.length; j++){ 
-                        for(int k = 0; k < num.length; k++){
-                            for(int l = 0; l < spec.length; l++) {
-                                if(w ==1) { //num and char and num and char at front
-                                    String specWord = num[i] + spec[j] + num[k] + spec[l] + word;
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w ==2) { //num and char and num at front and char at back
-                                    String specWord = num[i] + spec[j] + num[k] + word + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 3) { //num and char at front and num and char back
-                                    String specWord = num[i] + spec[j] + word + num[k] + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 4) { //num at front and char and num and char at back
-                                    String specWord = num[i] + word + spec[j] + num[k] + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 5) { //num and char and num and char at back
-                                    String specWord = word + num[i] + spec[j] + num[k] + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            for(int w = 1; w <= 5; w++) { //char, char, num, num
-                for(int i = 0; i< spec.length; i++) {
-                    for(int j = 0; j < spec.length; j++){ 
-                        for(int k = 0; k < num.length; k++){
-                            for(int l = 0; l < num.length; l++) {
-                                if(w ==1) { //char and char and num and num at front
-                                    String specWord = spec[i] + spec[j] + num[k] + num[l] + word;
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w ==2) { //char and char and num at front and num at back
-                                    String specWord = spec[i] + spec[j] + num[k] + word + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 3) { //char and char at front and num and num back
-                                    String specWord = spec[i] + spec[j] + word + num[k] + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 4) { //char at front and char and num and num at back
-                                    String specWord = spec[i] + word + spec[j] + num[k] + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 5) { //char and char and num and num at back
-                                    String specWord = word + spec[i] + spec[j] + num[k] + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            for(int w = 1; w <= 5; w++) { //char, num, char, num
-                for(int i = 0; i< spec.length; i++) {
-                    for(int j = 0; j < num.length; j++){ 
-                        for(int k = 0; k < spec.length; k++){
-                            for(int l = 0; l < num.length; l++) {
-                                if(w ==1) { //char and num and char and num at front
-                                    String specWord = spec[i] + num[j] + spec[k] + num[l] + word;
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w ==2) { //char and num and char at front and num at back
-                                    String specWord = spec[i] + num[j] + spec[k] + word + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 3) { //char and num at front and char and num back
-                                    String specWord = spec[i] + num[j] + word + spec[k] + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 4) { //char at front and num and char and num at back
-                                    String specWord = spec[i] + word + num[j] + spec[k] + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 5) { //char and num and char and num at back
-                                    String specWord = word + spec[i] + num[j] + spec[k] + num[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            for(int w = 1; w <= 5; w++) { //char, num, num, char
-                for(int i = 0; i< spec.length; i++) {
-                    for(int j = 0; j < num.length; j++){ 
-                        for(int k = 0; k < num.length; k++){
-                            for(int l = 0; l < spec.length; l++) {
-                                if(w ==1) { //char and num and num and char at front
-                                    String specWord = spec[i] + num[j] + num[k] + spec[l] + word;
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w ==2) { //char and num and num at front and char at back
-                                    String specWord = spec[i] + num[j] + num[k] + word + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 3) { //char and num at front and num and char back
-                                    String specWord = spec[i] + num[j] + word + num[k] + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 4) { //char at front and num and num and char at back
-                                    String specWord = spec[i] + word + num[j] + num[k] + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                                else if(w == 5) { //char and num and num and char at back
-                                    String specWord = word + spec[i] + num[j] + num[k] + spec[l];
-                                    String specDigest = JavaMD5Hash.md5(specWord);
-                                    if (specDigest.equals(password)) {
-                                        System.out.println("The password is " + specWord);
-                                        endTime = System.nanoTime();
-                                        totalTime = endTime - startTime;
-                                        System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
-                                        System.exit(0);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        if(passwordFound == true)
+        {
+            endTime = System.nanoTime(); //returns how long it takes for the program to run
+            totalTime = endTime - startTime;
+            System.out.println("The total time to find the password is " + totalTime/1000000000 + " seconds.");
+            System.exit(0); //exits the program
         }
+        if(passwordFound == false) {
+            System.out.println("The password is not in the system.");
+            System.exit(0);
+        };
+                
     }
 }
